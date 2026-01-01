@@ -9,20 +9,22 @@
 :root {
   --orange: #ff9f1c;
   --yellow: #ffbf00;
-  --dark: #0f0f0f;
-  --card: #171717;
+  --bg: #0b0b0b;
+  --card: #141414;
   --border: #262626;
 }
 
 * {
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #2a1a00, #000);
+  background:
+    radial-gradient(circle at top, rgba(255,159,28,.25), transparent 45%),
+    #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,22 +34,22 @@ body {
 .container {
   width: 100%;
   max-width: 520px;
-  background: linear-gradient(180deg, var(--card), #0b0b0b);
+  background: linear-gradient(180deg, var(--card), #0a0a0a);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 28px;
-  box-shadow: 0 0 60px rgba(255, 159, 28, 0.15);
+  box-shadow: 0 0 60px rgba(255,159,28,.15);
 }
 
 .logo {
   display: block;
-  margin: 0 auto 12px;
+  margin: 0 auto 10px;
   max-width: 120px;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
   font-size: 26px;
   background: linear-gradient(90deg, var(--orange), var(--yellow));
   -webkit-background-clip: text;
@@ -91,7 +93,7 @@ textarea {
   margin-top: 18px;
   padding: 14px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   color: #000;
   border: none;
   border-radius: 14px;
@@ -102,7 +104,12 @@ textarea {
 
 .submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 30px rgba(255, 191, 0, 0.4);
+  box-shadow: 0 12px 30px rgba(255,191,0,.4);
+}
+
+.submit-btn:disabled {
+  opacity: .7;
+  cursor: not-allowed;
 }
 
 .footer {
@@ -136,43 +143,42 @@ textarea {
     </div>
 
     <div class="field">
-      <label>Upload The Ban Image</label>
-      <input type="file" id="image" accept="image/*">
+      <label>Ban Image (link)</label>
+      <input type="url" id="image" placeholder="https://imgur.com/...">
     </div>
 
     <div class="field">
-      <label>Upload Your Proof Video</label>
-      <input type="file" id="video" accept="video/*">
+      <label>Proof Video (link)</label>
+      <input type="url" id="video" placeholder="https://youtube.com/...">
     </div>
 
-    <button class="submit-btn" type="submit">Submit Appeal</button>
+    <button class="submit-btn" id="submitBtn" type="submit">
+      Submit Appeal
+    </button>
   </form>
 
   <div class="footer">DrexoSMP © Appeal System</div>
 </div>
 
 <script>
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1456157294906576917/YNa_RXKqum1jXv0s_RSDEj_tMYYPUH4NZuI1GIkdQvdBGQGCjCU6w-G-Mr21xLf4NeZ4";
+const form = document.getElementById("appealForm");
+const btn = document.getElementById("submitBtn");
 
-document.getElementById("appealForm").addEventListener("submit", async e => {
+form.addEventListener("submit", async e => {
   e.preventDefault();
-
-  const formData = new FormData();
-
-  const ign = document.getElementById("ign").value;
-  const discord = document.getElementById("discord").value;
-  const reason = document.getElementById("reason").value;
-  const image = document.getElementById("image").files[0];
-  const video = document.getElementById("video").files[0];
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
 
   const payload = {
     embeds: [{
       title: "🚨 New Ban Appeal",
       color: 16753920,
       fields: [
-        { name: "IGN", value: ign, inline: true },
-        { name: "Discord", value: discord, inline: true },
-        { name: "Ban Reason", value: reason }
+        { name: "IGN", value: document.getElementById("ign").value, inline: true },
+        { name: "Discord", value: document.getElementById("discord").value, inline: true },
+        { name: "Ban Reason", value: document.getElementById("reason").value },
+        { name: "Ban Image", value: document.getElementById("image").value || "Not provided" },
+        { name: "Proof Video", value: document.getElementById("video").value || "Not provided" }
       ],
       footer: { text: "DrexoSMP Appeal System" },
       timestamp: new Date().toISOString()
@@ -180,33 +186,27 @@ document.getElementById("appealForm").addEventListener("submit", async e => {
     components: [{
       type: 1,
       components: [
-        {
-          type: 2,
-          label: "Accept",
-          style: 3,
-          custom_id: "appeal_accept"
-        },
-        {
-          type: 2,
-          label: "Reject",
-          style: 4,
-          custom_id: "appeal_reject"
-        }
+        { type: 2, label: "Accept", style: 3, custom_id: "appeal_accept" },
+        { type: 2, label: "Reject", style: 4, custom_id: "appeal_reject" }
       ]
     }]
   };
 
-  formData.append("payload_json", JSON.stringify(payload));
-  if (image) formData.append("file1", image);
-  if (video) formData.append("file2", video);
-
-  await fetch(WEBHOOK_URL, {
+  const res = await fetch("/api/appeal", {
     method: "POST",
-    body: formData
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
   });
 
-  alert("Your appeal has been submitted successfully!");
-  e.target.reset();
+  if (res.ok) {
+    alert("Your appeal has been submitted successfully!");
+    form.reset();
+  } else {
+    alert("Failed to submit appeal.");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Submit Appeal";
 });
 </script>
 </body>
