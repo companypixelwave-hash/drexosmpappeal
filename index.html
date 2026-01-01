@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DrexoSMP Ban Appeal</title>
+<title>DrexoSMP Appeal</title>
 <style>
   body {
     margin:0;
@@ -14,77 +14,37 @@
     min-height:100vh;
     background: linear-gradient(135deg, #ff9800, #ffc107);
   }
-  .card {
-    background:#0f0f0f;
-    padding:40px;
-    border-radius:20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  .container {
     text-align:center;
-    width:400px;
-    color:#fff;
   }
   .logo {
-    width:80px;
-    margin-bottom:20px;
-  }
-  h1 {
-    color:#ffb300;
-    margin-bottom:30px;
-  }
-  input, textarea {
-    width:100%;
-    padding:12px;
-    margin-bottom:15px;
-    border-radius:10px;
-    border:none;
-    background:#1b1b1b;
-    color:#fff;
-    font-size:14px;
+    width:150px;
+    margin-bottom:40px;
   }
   button {
-    width:100%;
-    padding:14px;
+    padding:20px 50px;
+    font-size:20px;
     font-weight:bold;
-    border-radius:12px;
     border:none;
+    border-radius:15px;
     cursor:pointer;
-    background: linear-gradient(135deg,#ff9800,#ffeb3b);
+    background: linear-gradient(135deg,#ff9800,#ffc107);
     color:#000;
-    font-size:16px;
+    transition: all 0.2s ease-in-out;
   }
   button:hover {
-    filter: brightness(1.05);
+    transform: scale(1.05);
+    filter: brightness(1.1);
   }
 </style>
 </head>
 <body>
-  <div class="card">
-    <img src="logo.png" class="logo" alt="Logo">
-    <h1>Ban Appeal</h1>
-    <input type="text" id="ign" placeholder="Your In-Game Name" required>
-    <input type="text" id="discord" placeholder="Your Discord Username" required>
-    <textarea id="reason" placeholder="Your Ban Reason" required></textarea>
-    <button id="appealBtn">Submit Appeal</button>
+  <div class="container">
+    <img src="logo.png" alt="DrexoSMP Logo" class="logo">
+    <br>
+    <button onclick="window.open('https://discord.com/api/webhooks/1456157294906576917/YNa_RXKqum1jXv0s_RSDEj_tMYYPUH4NZuI1GIkdQvdBGQGCjCU6w-G-Mr21xLf4NeZ4','_blank')">
+      Appeal Ban
+    </button>
   </div>
-
-<script>
-document.getElementById("appealBtn").addEventListener("click", function(){
-  const ign = document.getElementById("ign").value.trim();
-  const discord = document.getElementById("discord").value.trim();
-  const reason = document.getElementById("reason").value.trim();
-
-  if(!ign || !discord || !reason){
-    alert("Please fill in all fields!");
-    return;
-  }
-
-  // الرابط المباشر للويبهوك Discord
-  const webhookURL = "https://discord.com/api/webhooks/1456157294906576917/YNa_RXKqum1jXv0s_RSDEj_tMYYPUH4NZuI1GIkdQvdBGQGCjCU6w-G-Mr21xLf4NeZ4";
-
-  // Discord Webhooks لا يمكن إرسال POST من المتصفح بسبب CORS
-  // الحل هنا: نفتح الرابط مباشرة للـ Discord ليتم التعامل معه هناك
-  window.open(webhookURL, "_blank");
-});
-</script>
 </body>
 </html>
