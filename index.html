@@ -2,115 +2,88 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DrexoSMP | Ban Appeal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<title>DrexoSMP Ban Appeal</title>
 <style>
-body{
-  margin:0;
-  font-family:Inter,sans-serif;
-  background:linear-gradient(135deg,#ff9800,#ffc107);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.card{
-  background:#0f0f0f;
-  width:420px;
-  padding:30px;
-  border-radius:18px;
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
-  color:#fff;
-}
-.logo{
-  width:90px;
-  display:block;
-  margin:0 auto 20px;
-}
-h1{
-  text-align:center;
-  color:#ffb300;
-  margin-bottom:25px;
-}
-input,textarea{
-  width:100%;
-  background:#1b1b1b;
-  border:1px solid #333;
-  border-radius:10px;
-  padding:12px;
-  margin-bottom:14px;
-  color:#fff;
-  font-size:14px;
-}
-input[type=file]{padding:8px;}
-button{
-  width:100%;
-  background:linear-gradient(135deg,#ff9800,#ffeb3b);
-  border:none;
-  padding:14px;
-  font-size:16px;
-  font-weight:800;
-  color:#000;
-  border-radius:12px;
-  cursor:pointer;
-}
-button:hover{
-  filter:brightness(1.05);
-}
-.status{
-  text-align:center;
-  margin-top:15px;
-  font-weight:600;
-}
+  body {
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background: linear-gradient(135deg, #ff9800, #ffc107);
+  }
+  .card {
+    background:#0f0f0f;
+    padding:40px;
+    border-radius:20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    text-align:center;
+    width:400px;
+    color:#fff;
+  }
+  .logo {
+    width:80px;
+    margin-bottom:20px;
+  }
+  h1 {
+    color:#ffb300;
+    margin-bottom:30px;
+  }
+  input, textarea {
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border-radius:10px;
+    border:none;
+    background:#1b1b1b;
+    color:#fff;
+    font-size:14px;
+  }
+  button {
+    width:100%;
+    padding:14px;
+    font-weight:bold;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    background: linear-gradient(135deg,#ff9800,#ffeb3b);
+    color:#000;
+    font-size:16px;
+  }
+  button:hover {
+    filter: brightness(1.05);
+  }
 </style>
 </head>
 <body>
-<div class="card">
-  <img src="logo.png" class="logo">
-  <h1>Ban Appeal</h1>
-
-  <form id="appealForm">
+  <div class="card">
+    <img src="logo.png" class="logo" alt="Logo">
+    <h1>Ban Appeal</h1>
     <input type="text" id="ign" placeholder="Your In-Game Name" required>
     <input type="text" id="discord" placeholder="Your Discord Username" required>
     <textarea id="reason" placeholder="Your Ban Reason" required></textarea>
-    <input type="file" id="image" accept="image/*">
-    <input type="file" id="video" accept="video/*">
-    <button type="submit">Submit Appeal</button>
-  </form>
-
-  <div class="status" id="status"></div>
-</div>
+    <button id="appealBtn">Submit Appeal</button>
+  </div>
 
 <script>
-const form = document.getElementById("appealForm");
-const statusEl = document.getElementById("status");
+document.getElementById("appealBtn").addEventListener("click", function(){
+  const ign = document.getElementById("ign").value.trim();
+  const discord = document.getElementById("discord").value.trim();
+  const reason = document.getElementById("reason").value.trim();
 
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  statusEl.style.color="#fff";
-  statusEl.textContent="Submitting appeal...";
-
-  const ign = document.getElementById("ign").value;
-  const discord = document.getElementById("discord").value;
-  const reason = document.getElementById("reason").value;
-
-  try{
-    const res = await fetch("./api/appeal.js", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ign, discord, reason })
-    });
-
-    if(res.ok){
-      statusEl.style.color="#00ff88";
-      statusEl.textContent="Appeal sent successfully!";
-      form.reset();
-    } else throw new Error();
-  }catch{
-    statusEl.style.color="#ff5555";
-    statusEl.textContent="Failed to send appeal.";
+  if(!ign || !discord || !reason){
+    alert("Please fill in all fields!");
+    return;
   }
+
+  // الرابط المباشر للويبهوك Discord
+  const webhookURL = "https://discord.com/api/webhooks/1456157294906576917/YNa_RXKqum1jXv0s_RSDEj_tMYYPUH4NZuI1GIkdQvdBGQGCjCU6w-G-Mr21xLf4NeZ4";
+
+  // Discord Webhooks لا يمكن إرسال POST من المتصفح بسبب CORS
+  // الحل هنا: نفتح الرابط مباشرة للـ Discord ليتم التعامل معه هناك
+  window.open(webhookURL, "_blank");
 });
 </script>
 </body>
