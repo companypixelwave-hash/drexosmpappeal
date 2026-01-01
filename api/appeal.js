@@ -5,10 +5,8 @@ export default async function handler(req, res) {
 
   const { ign, discord, reason } = await req.json();
 
-  const WEBHOOK_URL = process.env.DISCORD_WEBHOOK;
-  if (!WEBHOOK_URL) {
-    return res.status(500).json({ error: "Webhook not configured in ENV" });
-  }
+  // الرابط مباشر هنا
+  const WEBHOOK_URL = "https://discord.com/api/webhooks/1456157294906576917/YNa_RXKqum1jXv0s_RSDEj_tMYYPUH4NZuI1GIkdQvdBGQGCjCU6w-G-Mr21xLf4NeZ4"; // ضع هنا رابط Webhook
 
   const payload = {
     username: "DrexoSMP Appeals",
